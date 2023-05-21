@@ -2,7 +2,7 @@ import { App } from "@slack/bolt";
 import type { SlackAction, BlockButtonAction } from "@slack/bolt";
 import { JSXSlack } from "jsx-slack";
 
-import { AppHome } from "./components/AppHome";
+import { AppHome } from "./components/appHome/AppHome";
 import { CreateHolidayModal } from "./components/modal/CreateHolidayModal";
 
 const app = new App({

@@ -1,6 +1,6 @@
 /** @jsxImportSource jsx-slack */
 /**
- * AppHomeContentsHolidayコンポーネント
+ * HolidayListコンポーネント
  */
 import {
   Header,
@@ -11,13 +11,13 @@ import {
   Button,
 } from "jsx-slack";
 
-export const AppHomeContentsHoliday = () => {
+export const HolidayList = () => {
   return (
-    <Actions>
+    <Section>
       <Button actionId="create_holiday" style="primary">
         新規登録
       </Button>
       <Button value="help">ヘルプ</Button>
-    </Actions>
+    </Section>
   );
 };
