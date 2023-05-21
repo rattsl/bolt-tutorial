@@ -5,10 +5,12 @@
 import {
   Modal,
   Section,
-  Divider,
+  Actions,
   RadioButtonGroup,
   RadioButton,
+  DatePicker,
   Button,
+  UsersSelect,
   Select,
   Option,
   Textarea,
@@ -21,18 +23,30 @@ type Props = {
 export const CreateHolidayModal = (Props: Props) => {
   return (
     <Modal title="休暇連絡 新規登録" close="Cancel">
-      <Select
-        label="名前※"
-        placeholder="被休暇者を選択してください"
-        multiple
-        required
-      >
-        <Option value="value-0">user1</Option>
-        <Option value="value-1">user2</Option>
-        <Option value="value-2">user3</Option>
-        <Option value="value-3">user4</Option>
-        <Option value="value-4">user5</Option>
-      </Select>
+      <UsersSelect label="名前" required />
+
+      <RadioButtonGroup label="日時" required>
+        <RadioButton value="1" checked>
+          終日
+        </RadioButton>
+        <RadioButton value="2">連日</RadioButton>
+      </RadioButtonGroup>
+
+      <Actions>
+        <DatePicker actionId="date_picker_from" />
+        <Select>
+          <Option value="value-0">午前休</Option>
+          <Option value="value-1">午後休</Option>
+          <Option value="value-2">全休</Option>
+        </Select>
+      </Actions>
+
+      {/* <Actions>
+        <DatePicker actionId="date_picker_from" placeholder="from" />
+        <DatePicker actionId="date_picker_to" placeholder="to" />
+      </Actions> */}
+
+      <Textarea label="休暇理由" required />
 
       <Select label="メンション先" multiple>
         <Option value="value-a">user1</Option>
@@ -41,9 +55,6 @@ export const CreateHolidayModal = (Props: Props) => {
         <Option value="value-d">user4</Option>
         <Option value="value-e">user5</Option>
       </Select>
-
-      <Textarea label="休暇理由" required />
-      <Textarea label="Anything else you want to tell us?" />
     </Modal>
   );
 };

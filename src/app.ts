@@ -23,8 +23,8 @@ app.message("hc", async ({ say, next }) => {
 });
 
 // ホームタブ
-app.event("app_home_opened", async ({ event, context, payload }) => {
-  console.log("app_home_opened");
+app.event("app_home_opened", async ({ event, context, payload, logger }) => {
+  logger.debug(`user: ${event.user}`);
   const homeView = await AppHome({ name: "r4ttsl" });
   try {
     await app.client.views.publish({
