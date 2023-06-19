@@ -11,13 +11,17 @@ import {
   Button,
 } from "jsx-slack";
 
-export const HolidayList = () => {
+export type HolidayInfo = {
+  date: string;
+  division: "午前休" | "午後休" | "全休"
+  userIcon: string;
+}
+
+export const HolidayList = (props: HolidayInfo) => {
+  const { date, division, userIcon } = props;
   return (
     <Section>
-      <Button actionId="create_holiday" style="primary">
-        新規登録
-      </Button>
-      <Button value="help">ヘルプ</Button>
-    </Section>
+    <b>{date}</b> {division} {userIcon}
+  </Section>
   );
 };
