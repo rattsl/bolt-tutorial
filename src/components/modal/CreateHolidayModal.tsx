@@ -22,7 +22,11 @@ type Props = {
 
 export const CreateHolidayModal = (Props: Props) => {
   return (
-    <Modal title="休暇連絡 新規登録" close="Cancel">
+    <Modal
+      title="休暇連絡 新規登録"
+      close="Cancel"
+      callbackId="send_holiday_form"
+    >
       <UsersSelect label="名前" required />
 
       <RadioButtonGroup label="日時" required>
@@ -40,11 +44,6 @@ export const CreateHolidayModal = (Props: Props) => {
           <Option value="value-2">全休</Option>
         </Select>
       </Actions>
-
-      {/* <Actions>
-        <DatePicker actionId="date_picker_from" placeholder="from" />
-        <DatePicker actionId="date_picker_to" placeholder="to" />
-      </Actions> */}
 
       <Textarea label="休暇理由" required />
 

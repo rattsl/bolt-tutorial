@@ -2,7 +2,7 @@
 /**
  * AppHomeHeaderコンポーネント
  */
-import { Header } from "jsx-slack";
+import { Header, Section, Mrkdwn } from "jsx-slack";
 
 type Props = {
   name: string;
@@ -15,7 +15,7 @@ export const AppHomeHeader = (Props: Props) => {
   const otukare = "おつかれさまです";
   return (
     <Header>
-      {otukare} @{Props.name}さん :wave:
+      こんにちは、<b>{`<@${Props.name}>`}</b>さん！
     </Header>
   );
 };
