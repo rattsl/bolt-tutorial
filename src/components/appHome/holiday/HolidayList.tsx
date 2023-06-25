@@ -3,25 +3,28 @@
  * HolidayListコンポーネント
  */
 import {
-  Header,
-  Section,
-  Actions,
-  RadioButtonGroup,
-  RadioButton,
-  Button,
+  Mrkdwn,
+  Image,
+  Context
 } from "jsx-slack";
 
 export type HolidayInfo = {
+  userName: string;
   date: string;
   division: "午前休" | "午後休" | "全休"
-  userIcon: string;
+  iconUrl: string;
 }
 
 export const HolidayList = (props: HolidayInfo) => {
-  const { date, division, userIcon } = props;
+  const { userName, date, division, iconUrl } = props;
   return (
-    <Section>
-    <b>{date}</b> {division} {userIcon}
-  </Section>
+    <Context>
+      <Mrkdwn>
+        <code>{date}</code>&nbsp;
+        <b>{division}</b>
+      </Mrkdwn>
+      -
+      <Image src={iconUrl} alt={userName} />
+    </Context>
   );
 };
