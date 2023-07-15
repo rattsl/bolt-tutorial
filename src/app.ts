@@ -10,6 +10,7 @@ import { JSXSlack } from "jsx-slack";
 
 import { AppHome } from "./components/appHome/AppHome";
 import { CreateHolidayModal } from "./components/modal/CreateHolidayModal";
+import { HolidayMessage } from "./components/message/holidayMessage";
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -103,25 +104,42 @@ app.action<BlockButtonAction>(
  * 休暇連絡フォームアクション受け取り
  */
 app.view<SlackViewAction>(
-  "sendHolidayForm",
+  "send_holiday_form",
   async ({ ack, body, context, view }) => {
     ack();
 
     // console.log("body: " + JSON.stringify(body));
     console.log("view: " + JSON.stringify(view));
 
-    const user_id: string = body.user.id;
+    // const user_id: string = body.user.id;
 
     const formViewStateValues = view.state.values;
-    const form_title = formViewStateValues.title.title.value;
-    const form_tags = formViewStateValues.tags.tags.value;
-    const form_body = formViewStateValues.body.body.value;
+    console.log("formViewStateValues: " + JSON.stringify(formViewStateValues));
 
-    // app.client.chat.postMessage({
-    //   token: context.botToken,
-    //   channel: user_id,
-    //   text: `Title: ${form_title}\nTags: ${form_tags}\nBody: ${form_body}`,
-    // });
+    // TODO: キャメルとスネークが混在してるのどうにかする
+    const selectedUser =
+      formViewStateValues.holidayModalName.name.selected_user;
+    const selectedDate =
+      formViewStateValues.holidayModalActions.date.selected_date;
+    const selectedDivision =
+      formViewStateValues.holidayModalActions.division.selected_option.value;
+    const note = formViewStateValues.holidayModalNote.note.value;
+    const mention =
+      formViewStateValues.holidayModalMention.mention.selected_options;
+
+    const messageBlock = HolidayMessage({
+      selectedUser: selectedUser,
+      selectedDate: selectedDate,
+      selectedDivision: selectedDivision,
+      note: note,
+      mention: mention,
+    });
+
+    app.client.chat.postMessage({
+      token: context.botToken,
+      channel: "C048YLXNNPM",
+      blocks: JSXSlack(messageBlock),
+    });
   }
 );
 

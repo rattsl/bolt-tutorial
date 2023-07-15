@@ -22,15 +22,11 @@ type Props = {
 
 export const CreateHolidayModal = ({ memberNames }: Props) => {
   return (
-    <Modal
-      title="休暇連絡 新規登録"
-      close="Cancel"
-      callbackId="sendHolidayForm"
-    >
+    <Modal title="新規休暇登録" close="Cancel" callbackId="send_holiday_form">
       <UsersSelect
         label="休暇者"
         blockId="holidayModalName"
-        actionId="holidayModalName"
+        actionId="name"
         required
       />
 
@@ -46,11 +42,8 @@ export const CreateHolidayModal = ({ memberNames }: Props) => {
       </RadioButtonGroup>
 
       <Actions blockId="holidayModalActions">
-        <DatePicker
-          actionId="holidayModalDatePicker"
-          initialDate={new Date()}
-        />
-        <Select actionId="holidayModalSelect">
+        <DatePicker actionId="date" initialDate={new Date()} />
+        <Select actionId="division">
           <Option value="0">午前休</Option>
           <Option value="1">午後休</Option>
           <Option value="2" selected>
@@ -59,18 +52,12 @@ export const CreateHolidayModal = ({ memberNames }: Props) => {
         </Select>
       </Actions>
 
-      <Textarea label="備考" blockId="holidayModalNote" />
+      <Textarea label="備考" blockId="holidayModalNote" actionId="note" />
 
-      {/* <UsersSelect
-        label="メンション先"
-        blockId="holidayModalMention"
-        actionId="holidayModalMention"
-        required
-      /> */}
       <Select
         label="メンション先"
         blockId="holidayModalMention"
-        actionId="holidayModalMention"
+        actionId="mention"
         multiple
       >
         {memberNames.map((name, index) => {
