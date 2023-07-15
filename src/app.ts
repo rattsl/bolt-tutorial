@@ -18,6 +18,13 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
 });
 
+type User = {
+  id: string;
+  real_name: string;
+  image_url: string;
+  is_bot: boolean;
+};
+
 /**
  * ヘルスチェック
  */
@@ -63,7 +70,21 @@ app.action<BlockButtonAction>(
 
     // 処理側に渡されたイベントを処理側が承認しているかどうかをSlackに通知
     await ack();
-    const modalView = await CreateHolidayModal({ name: "r4ttsl" });
+
+    // ユーザー一覧取得
+    const usersList = await client.users.list();
+    const members = usersList.members;
+    // ボット以外のユーザー名取得
+    const memberNames = members
+      .filter((member) => {
+        return member.is_bot === false;
+      })
+      .map((member) => {
+        return member.real_name;
+      });
+    // console.log("usersList: " + JSON.stringify(names));
+
+    const modalView = await CreateHolidayModal({ memberNames: memberNames });
 
     try {
       await client.views.open({
@@ -82,22 +103,25 @@ app.action<BlockButtonAction>(
  * 休暇連絡フォームアクション受け取り
  */
 app.view<SlackViewAction>(
-  "send_holiday_form",
+  "sendHolidayForm",
   async ({ ack, body, context, view }) => {
     ack();
 
+    // console.log("body: " + JSON.stringify(body));
+    console.log("view: " + JSON.stringify(view));
+
     const user_id: string = body.user.id;
 
-    const form_view_state_values = view.state.values;
-    const form_title = form_view_state_values.title.title.value;
-    const form_tags = form_view_state_values.tags.tags.value;
-    const form_body = form_view_state_values.body.body.value;
+    const formViewStateValues = view.state.values;
+    const form_title = formViewStateValues.title.title.value;
+    const form_tags = formViewStateValues.tags.tags.value;
+    const form_body = formViewStateValues.body.body.value;
 
-    app.client.chat.postMessage({
-      token: context.botToken,
-      channel: user_id,
-      text: `Title: ${form_title}\nTags: ${form_tags}\nBody: ${form_body}`,
-    });
+    // app.client.chat.postMessage({
+    //   token: context.botToken,
+    //   channel: user_id,
+    //   text: `Title: ${form_title}\nTags: ${form_tags}\nBody: ${form_body}`,
+    // });
   }
 );
 
