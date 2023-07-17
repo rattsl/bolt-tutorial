@@ -10,7 +10,7 @@ import { JSXSlack } from "jsx-slack";
 
 import { AppHome } from "./components/appHome/AppHome";
 import { CreateHolidayModal } from "./components/modal/CreateHolidayModal";
-import { HolidayMessage } from "./components/message/holidayMessage";
+import { HolidayMessage } from "./components/message/HolidayMessage";
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -47,6 +47,8 @@ app.event(
     const userInfo = await client.users.info({
       user: event.user,
     });
+
+    console.log("hoge" + JSON.stringify(userInfo.user.name));
 
     const homeView = await AppHome({ name: userInfo.user.name });
     try {
@@ -105,30 +107,51 @@ app.action<BlockButtonAction>(
  */
 app.view<SlackViewAction>(
   "send_holiday_form",
-  async ({ ack, body, context, view }) => {
+  async ({ ack, client, context, view }) => {
     ack();
 
     // console.log("body: " + JSON.stringify(body));
     console.log("view: " + JSON.stringify(view));
 
-    // const user_id: string = body.user.id;
+    // ユーザー一覧取得
+    const usersList = await client.users.list();
+    console.log("userlist: " + JSON.stringify(usersList));
 
+    // 登録ボタン押下後の各フォームからvalue取得
     const formViewStateValues = view.state.values;
     console.log("formViewStateValues: " + JSON.stringify(formViewStateValues));
 
     // TODO: キャメルとスネークが混在してるのどうにかする
-    const selectedUser =
+    // ユーザーID受け取り
+    const selectedUserId =
       formViewStateValues.holidayModalName.name.selected_user;
+    // idと突き合わせしてユーザー名を取得
+    const selectedUser = usersList.members
+      .filter((user) => {
+        return user.id === selectedUserId;
+      })
+      .map((user) => {
+        return user.profile.display_name;
+      });
+
+    // 日付受け取り
     const selectedDate =
       formViewStateValues.holidayModalActions.date.selected_date;
+
+    // 休暇区分（全休・午前休・午後休のどれか）受け取り
     const selectedDivision =
-      formViewStateValues.holidayModalActions.division.selected_option.value;
+      formViewStateValues.holidayModalActions.division.selected_option.text
+        .text;
+
+    // 備考受け取り
     const note = formViewStateValues.holidayModalNote.note.value;
+
+    // メンション先受け取り
     const mention =
       formViewStateValues.holidayModalMention.mention.selected_options;
 
     const messageBlock = HolidayMessage({
-      selectedUser: selectedUser,
+      selectedUser: selectedUser[0],
       selectedDate: selectedDate,
       selectedDivision: selectedDivision,
       note: note,
